@@ -1,0 +1,6 @@
+# Allow PHP execution in API directory
+<FilesMatch "\.php$">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>

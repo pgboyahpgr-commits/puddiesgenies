@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "from": "table",
+        "text": "hi",
+        "time": "19:55:54"
+    },
+    {
+        "id": 2,
+        "from": "table",
+        "text": "what is the best dish",
+        "time": "20:04:47"
+    },
+    {
+        "id": 3,
+        "from": "table",
+        "text": "test",
+        "time": "21:43:39"
+    }
+]

@@ -1,0 +1,31 @@
+# SmakAI Production .htaccess for InfinityFree
+
+# Force HTTPS
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Block access to data directory
+RewriteRule ^data/ - [F,L]
+
+# Block access to includes directory from browser
+RewriteRule ^includes/ - [F,L]
+
+# Cache static assets (1 year)
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff2?)$">
+  Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+
+# Security headers
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Custom error pages
+ErrorDocument 403 /index.php
+ErrorDocument 404 /index.php
+ErrorDocument 500 /index.php
+
+# Directory listing off
+Options -Indexes

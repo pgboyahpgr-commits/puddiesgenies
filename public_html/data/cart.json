@@ -1,0 +1,18 @@
+{
+    "0dd26f1e36cbf4fa88140dedbff74fa0": {
+        "items": [],
+        "updated_at": "2026-07-16 10:17:29"
+    },
+    "e2e_test": {
+        "items": [
+            {
+                "id": "5",
+                "name": "Naan",
+                "price": 40,
+                "qty": 3,
+                "image": ""
+            }
+        ],
+        "updated_at": "2026-07-16 10:18:23"
+    }
+}
