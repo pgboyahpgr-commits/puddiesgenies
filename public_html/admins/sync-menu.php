@@ -19,9 +19,9 @@ if ($result) {
 <body>
 <div class="max-w-xl mx-auto px-4 py-12 text-center">
   <div class="bg-white/80 backdrop-blur rounded-3xl p-8 shadow-lg border border-gray-100">
-    <h1 class="text-2xl font-bold mb-4" style="color:#2D3436;">🔄 Sync Menu</h1>
+    <h1 class="text-2xl font-bold mb-4" style="color:var(--text);" data-translate>🔄 Sync Menu</h1>
     <p class="text-sm"><?=$msg?></p>
-    <p class="text-xs text-gray-400 mt-3">Redirecting back to Settings...</p>
+    <p class="text-xs text-gray-400 mt-3" data-translate>Redirecting back to Settings...</p>
   </div>
 </div>
 </body>

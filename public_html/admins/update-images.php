@@ -61,13 +61,13 @@ $remaining = max(0, count($allItems) - ($offset + $batchSize));
 <body>
 <div class="max-w-xl mx-auto px-4 py-12 text-center">
   <div class="bg-white/80 backdrop-blur rounded-3xl p-8 shadow-lg border border-gray-100">
-    <h1 class="text-2xl font-bold mb-4" style="color:#2D3436;">🖼️ Update Images</h1>
+    <h1 class="text-2xl font-bold mb-4" style="color:var(--text);" data-translate>🖼️ Update Images</h1>
     <p class="text-sm text-gray-500 mb-4">Processed <?=$processed?> dishes (<?=$updated?> new images) — <?=$remaining?> remaining</p>
     <?php if ($remaining > 0): ?>
-    <a href="?offset=<?=$offset + $batchSize?>" class="px-6 py-3 rounded-full font-bold text-white inline-block" style="background:#4ECDC4;">Continue (<?=$remaining?> left)</a>
+    <a href="?offset=<?=$offset + $batchSize?>" class="px-6 py-3 rounded-full font-bold text-white inline-block" style="background:#538bdf;">Continue (<?=$remaining?> left)</a>
     <?php else: ?>
-    <p class="text-green-600 font-bold mb-4">✅ All images processed!</p>
-    <a href="/admins/dashboard.php" class="px-6 py-3 rounded-full font-bold inline-block" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:#2D3436;">← Back to Dashboard</a>
+    <p class="text-green-600 font-bold mb-4" data-translate>✅ All images processed!</p>
+    <a href="/admins/dashboard.php" class="px-6 py-3 rounded-full font-bold inline-block" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:var(--text);" data-translate>← Back to Dashboard</a>
     <?php endif; ?>
   </div>
 </div>

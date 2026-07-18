@@ -85,13 +85,13 @@ $csrfToken = csrfToken();
 </head>
 <body>
 <nav class="max-w-7xl mx-auto px-4 py-4 flex items-center gap-3 flex-wrap">
-  <a href="/admins/dashboard.php" class="text-xl font-bold no-underline" style="color:#2D3436;">← SmakAI Admin</a>
-  <span class="text-gray-400">/ Menu Editor</span>
+  <a href="/admins/dashboard.php" class="text-xl font-bold no-underline" style="color:var(--text);" data-translate>← SmakAI Admin</a>
+  <span class="text-gray-400" data-translate>/ Menu Editor</span>
 </nav>
 <main class="max-w-7xl mx-auto px-4 pb-12">
   <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
-    <h1 class="text-3xl font-bold" style="color:#2D3436;">📋 Menu Editor</h1>
-    <button onclick="document.getElementById('addForm').classList.toggle('hidden')" class="px-4 py-2 rounded-full font-bold text-white" style="background:#4ECDC4;">+ Add Dish</button>
+    <h1 class="text-3xl font-bold" style="color:var(--text);" data-translate>📋 Menu Editor</h1>
+    <button onclick="document.getElementById('addForm').classList.toggle('hidden')" class="px-4 py-2 rounded-full font-bold text-white" style="background:#538bdf;" data-translate>+ Add Dish</button>
   </div>
 
   <?php if (isset($_SESSION['admin_message'])): ?>
@@ -101,21 +101,21 @@ $csrfToken = csrfToken();
   <?php unset($_SESSION['admin_message']); endif; ?>
 
   <div id="addForm" class="hidden bg-white/80 backdrop-blur rounded-2xl p-5 shadow border border-gray-100 mb-6">
-    <h3 class="font-bold mb-3" id="formTitle">Add New Dish</h3>
+    <h3 class="font-bold mb-3" id="formTitle" data-translate>Add New Dish</h3>
     <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-3" id="dishForm">
       <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
       <input type="hidden" name="action" id="formAction" value="add" />
       <input type="hidden" name="item_id" id="formItemId" value="" />
       <div>
-        <label class="text-xs text-gray-400 block mb-1">🍛 Dish Name *</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>🍛 Dish Name *</label>
         <input name="name" id="formName" placeholder="e.g. Butter Chicken" required class="w-full px-3 py-2 rounded-full border border-gray-200 text-sm" />
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">💰 Price (₹) *</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>💰 Price (₹) *</label>
         <input name="price" id="formPrice" type="number" min="1" placeholder="e.g. 299" required class="w-full px-3 py-2 rounded-full border border-gray-200 text-sm" />
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">📁 Category</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>📁 Category</label>
         <select name="category" id="formCategory" class="w-full px-3 py-2 rounded-full border border-gray-200 text-sm">
           <?php foreach ($categories as $cat): ?>
           <option value="<?=$cat['id']?>"><?=htmlspecialchars($cat['name'])?></option>
@@ -123,46 +123,46 @@ $csrfToken = csrfToken();
         </select>
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">📝 Description</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>📝 Description</label>
         <input name="description" id="formDesc" placeholder="What's in this dish? Ingredients, taste notes..." class="w-full px-3 py-2 rounded-full border border-gray-200 text-sm" />
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">🖼️ Image URL</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>🖼️ Image URL</label>
         <input name="image" id="formImage" placeholder="https://example.com/dish.jpg" class="w-full px-3 py-2 rounded-full border border-gray-200 text-sm" />
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">🌶️ Spice Level</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>🌶️ Spice Level</label>
         <select name="spice_level" id="formSpice" class="w-full px-3 py-2 rounded-full border border-gray-200 text-sm">
-          <option value="mild">Mild (gentle on stomach)</option><option value="medium">Medium (balanced heat)</option><option value="hot">Hot (🔥 spicy kick)</option>
+          <option value="mild" data-translate>Mild (gentle on stomach)</option><option value="medium" data-translate>Medium (balanced heat)</option><option value="hot" data-translate>Hot (🔥 spicy kick)</option>
         </select>
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">📍 Region / Origin</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>📍 Region / Origin</label>
         <input name="region" id="formRegion" placeholder="e.g. Punjab, South India, Mughlai..." class="w-full px-3 py-2 rounded-full border border-gray-200 text-sm" />
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">⏱️ Cooking Time</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>⏱️ Cooking Time</label>
         <input name="cooking_time" id="formCook" placeholder="e.g. 30 mins" class="w-full px-3 py-2 rounded-full border border-gray-200 text-sm" />
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">🔥 Calories</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>🔥 Calories</label>
         <input name="calories" id="formCal" type="number" min="0" placeholder="e.g. 450" class="w-full px-3 py-2 rounded-full border border-gray-200 text-sm" />
       </div>
       <div class="flex gap-4 items-center">
         <label class="flex items-center gap-1 text-sm"><input type="checkbox" name="is_vegetarian" id="formVeg" /> 🥬 Vegetarian</label>
         <label class="flex items-center gap-1 text-sm"><input type="checkbox" name="popular" id="formPop" /> ⭐ Popular</label>
       </div>
-      <button type="submit" class="px-4 py-2 rounded-full font-bold text-white" style="background:#4ECDC4;">Save Dish</button>
+      <button type="submit" class="px-4 py-2 rounded-full font-bold text-white" style="background:#538bdf;" data-translate>Save Dish</button>
     </form>
   </div>
 
   <?php foreach ($categories as $cat): ?>
   <div class="mb-6">
-    <h2 class="text-xl font-bold mb-2" style="color:#2D3436;"><?=htmlspecialchars($cat['name'])?> <span class="text-sm font-normal text-gray-400">(<?=count($cat['items'])?> items)</span></h2>
+    <h2 class="text-xl font-bold mb-2" style="color:var(--text);"><?=htmlspecialchars($cat['name'])?> <span class="text-sm font-normal text-gray-400">(<?=count($cat['items'])?> items)</span></h2>
     <div class="bg-white/80 backdrop-blur rounded-2xl shadow border border-gray-100 overflow-hidden">
       <table class="w-full text-sm">
         <thead><tr class="bg-gray-50 text-gray-500">
-          <th class="text-left p-2">Name</th><th class="text-left p-2">Price</th><th class="text-left p-2">Spice</th><th class="text-left p-2">Veg</th><th class="text-left p-2">Actions</th>
+          <th class="text-left p-2" data-translate>Name</th><th class="text-left p-2" data-translate>Price</th><th class="text-left p-2" data-translate>Spice</th><th class="text-left p-2" data-translate>Veg</th><th class="text-left p-2" data-translate>Actions</th>
         </tr></thead>
         <tbody>
           <?php foreach ($cat['items'] as $item): ?>
@@ -177,7 +177,7 @@ $csrfToken = csrfToken();
                 <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
                 <input type="hidden" name="action" value="delete" />
                 <input type="hidden" name="item_id" value="<?=htmlspecialchars($item['id'])?>" />
-                <button type="submit" class="text-red-500 text-xs font-bold" onclick="return confirm('Delete <?=htmlspecialchars($item['name'])?>?')">Delete</button>
+                <button type="submit" class="text-red-500 text-xs font-bold" onclick="return confirm('Delete <?=htmlspecialchars($item['name'])?>?')" data-translate>Delete</button>
               </form>
             </td>
           </tr>

@@ -66,55 +66,55 @@ body{font-family:'Nunito',sans-serif;background:#FFF8F0;}h1,h2,h3{font-family:'F
 <body>
 <nav class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between flex-wrap gap-3">
   <div>
-    <a href="/admins/dashboard.php" style="text-decoration:none;"><span class="text-2xl font-bold" style="color:#2D3436;">Smak<span style="color:#FF6B6B;">AI</span></span></a>
-    <span class="text-sm text-gray-400 ml-2">Admin</span>
+    <a href="/admins/dashboard.php" style="text-decoration:none;"><span class="text-2xl font-bold" style="color:var(--text);">Smak<span style="color:#f68e9a;">AI</span></span></a>
+    <span class="text-sm text-gray-400 ml-2" data-translate>Admin</span>
   </div>
   <div class="flex gap-2 flex-wrap">
-    <a href="/admins/dashboard.php" class="px-4 py-2 rounded-full text-sm font-semibold" style="background:#FF6B6B;color:#fff;text-decoration:none;">Dashboard</a>
-    <a href="/admins/orders.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:#2D3436;">Orders</a>
-    <a href="/admins/menu.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:#2D3436;">Menu</a>
-    <a href="/admins/tables.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:#2D3436;">Tables</a>
-    <a href="/admins/stream.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:#2D3436;">Stream</a>
-    <a href="/admins/talk.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:#2D3436;">Chat</a>
-    <a href="/admins/events.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:#2D3436;">🎉 Events</a>
-    <a href="/admins/settings.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:#2D3436;">Settings</a>
-    <a href="/admins/logout.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:#2D3436;">Logout</a>
+    <a href="/admins/dashboard.php" class="px-4 py-2 rounded-full text-sm font-semibold" style="background:#f68e9a;color:#fff;text-decoration:none;" data-translate>Dashboard</a>
+    <a href="/admins/orders.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:var(--text);" data-translate>Orders</a>
+    <a href="/admins/menu.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:var(--text);" data-translate>Menu</a>
+    <a href="/admins/tables.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:var(--text);" data-translate>Tables</a>
+    <a href="/admins/stream.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:var(--text);" data-translate>Stream</a>
+    <a href="/admins/talk.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:var(--text);" data-translate>Chat</a>
+    <a href="/admins/events.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:var(--text);" data-translate>🎉 Events</a>
+    <a href="/admins/settings.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:var(--text);" data-translate>Settings</a>
+    <a href="/admins/logout.php" class="px-4 py-2 rounded-full text-sm font-semibold no-underline" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:var(--text);" data-translate>Logout</a>
   </div>
 </nav>
 <main class="max-w-7xl mx-auto px-4 pb-12">
-  <h1 class="text-3xl font-bold mb-6" style="color:#2D3436;">📊 Dashboard</h1>
+  <h1 class="text-3xl font-bold mb-6" style="color:var(--text);" data-translate>📊 Dashboard</h1>
 
   <!-- Stats Grid -->
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
     <div class="stat-card text-center">
-      <p class="text-xs text-gray-400 uppercase tracking-wide">Today Orders</p>
-      <p class="text-3xl font-bold mt-1" style="color:#FF6B6B;"><?= count($todayOrders) ?></p>
+      <p class="text-xs text-gray-400 uppercase tracking-wide" data-translate>Today Orders</p>
+      <p class="text-3xl font-bold mt-1" style="color:#f68e9a;"><?= count($todayOrders) ?></p>
       <p class="text-xs text-gray-400 mt-1"><?= count($weekOrders) ?> this week</p>
     </div>
     <div class="stat-card text-center">
-      <p class="text-xs text-gray-400 uppercase tracking-wide">Pending</p>
+      <p class="text-xs text-gray-400 uppercase tracking-wide" data-translate>Pending</p>
       <p class="text-3xl font-bold mt-1" style="color:#F59E0B;"><?= count($pendingOrders) ?></p>
-      <p class="text-xs text-gray-400 mt-1">Needs attention</p>
+      <p class="text-xs text-gray-400 mt-1" data-translate>Needs attention</p>
     </div>
     <div class="stat-card text-center">
-      <p class="text-xs text-gray-400 uppercase tracking-wide">Revenue</p>
+      <p class="text-xs text-gray-400 uppercase tracking-wide" data-translate>Revenue</p>
       <p class="text-3xl font-bold mt-1" style="color:#10B981;">₹<?= $todayRevenue ?></p>
       <p class="text-xs text-gray-400 mt-1">₹<?= $weekRevenue ?> this week</p>
     </div>
     <div class="stat-card text-center">
-      <p class="text-xs text-gray-400 uppercase tracking-wide">Stream</p>
+      <p class="text-xs text-gray-400 uppercase tracking-wide" data-translate>Stream</p>
       <p class="text-3xl font-bold mt-1" style="color:<?= $streamOn ? '#10B981' : '#EF4444' ?>;"><?= $streamOn ? 'LIVE' : 'OFF' ?></p>
-      <p class="text-xs text-gray-400 mt-1"><a href="/admins/stream.php" style="color:#FF6B6B;">Manage</a></p>
+      <p class="text-xs text-gray-400 mt-1"><a href="/admins/stream.php" style="color:#f68e9a;" data-translate>Manage</a></p>
     </div>
     <div class="stat-card text-center">
-      <p class="text-xs text-gray-400 uppercase tracking-wide">Tables</p>
+      <p class="text-xs text-gray-400 uppercase tracking-wide" data-translate>Tables</p>
       <p class="text-3xl font-bold mt-1" style="color:#6366F1;"><?= count($tables['tables'] ?? []) ?></p>
       <p class="text-xs text-gray-400 mt-1"><?= $activeTables ?> active</p>
     </div>
     <div class="stat-card text-center">
-      <p class="text-xs text-gray-400 uppercase tracking-wide">Menu</p>
+      <p class="text-xs text-gray-400 uppercase tracking-wide" data-translate>Menu</p>
       <p class="text-3xl font-bold mt-1" style="color:#EC4899;"><?= $totalItems ?></p>
-      <p class="text-xs text-gray-400 mt-1">dishes</p>
+      <p class="text-xs text-gray-400 mt-1" data-translate>dishes</p>
     </div>
   </div>
 
@@ -122,12 +122,12 @@ body{font-family:'Nunito',sans-serif;background:#FFF8F0;}h1,h2,h3{font-family:'F
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Weekly Orders Chart -->
     <div class="bg-white/80 backdrop-blur rounded-2xl p-5 shadow border border-gray-100">
-      <h3 class="font-bold mb-4">📈 Orders This Week</h3>
+      <h3 class="font-bold mb-4" data-translate>📈 Orders This Week</h3>
       <div class="flex items-end gap-3" style="height:160px;">
         <?php for ($i = 0; $i < 7; $i++): ?>
         <div class="flex-1 flex flex-col items-center gap-1">
           <div class="w-full flex flex-col items-center justify-end" style="height:140px;">
-            <div class="chart-bar w-full max-w-[32px]" style="height:<?= max(6, round($dayCounts[$i] / $maxDay * 130)) ?>px;background:<?= $dayCounts[$i] > 0 ? '#FF6B6B' : '#eee' ?>;"></div>
+            <div class="chart-bar w-full max-w-[32px]" style="height:<?= max(6, round($dayCounts[$i] / $maxDay * 130)) ?>px;background:<?= $dayCounts[$i] > 0 ? '#f68e9a' : '#eee' ?>;"></div>
           </div>
           <span class="text-xs text-gray-400"><?= $dayLabels[$i] ?></span>
           <span class="text-xs font-bold"><?= $dayCounts[$i] ?></span>
@@ -138,7 +138,7 @@ body{font-family:'Nunito',sans-serif;background:#FFF8F0;}h1,h2,h3{font-family:'F
 
     <!-- Popular Dishes -->
     <div class="bg-white/80 backdrop-blur rounded-2xl p-5 shadow border border-gray-100">
-      <h3 class="font-bold mb-4">⭐ Popular Dishes</h3>
+      <h3 class="font-bold mb-4" data-translate>⭐ Popular Dishes</h3>
       <?php if ($popularDishes): ?>
       <div class="space-y-2">
         <?php 
@@ -153,13 +153,13 @@ body{font-family:'Nunito',sans-serif;background:#FFF8F0;}h1,h2,h3{font-family:'F
             <span class="text-gray-400"><?= $count ?> ordered</span>
           </div>
           <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-            <div class="h-full rounded-full" style="width:<?= $pct ?>%;background:<?= $rank === 1 ? '#FF6B6B' : ($rank <= 3 ? '#4ECDC4' : '#FFE66D') ?>;transition:width 0.6s;"></div>
+            <div class="h-full rounded-full" style="width:<?= $pct ?>%;background:<?= $rank === 1 ? '#f68e9a' : ($rank <= 3 ? '#538bdf' : '#f7b6bf') ?>;transition:width 0.6s;"></div>
           </div>
         </div>
         <?php $rank++; endforeach; ?>
       </div>
       <?php else: ?>
-      <p class="text-gray-400 text-sm text-center py-4">No orders yet — data will appear here</p>
+      <p class="text-gray-400 text-sm text-center py-4" data-translate>No orders yet — data will appear here</p>
       <?php endif; ?>
     </div>
   </div>
@@ -167,13 +167,13 @@ body{font-family:'Nunito',sans-serif;background:#FFF8F0;}h1,h2,h3{font-family:'F
   <!-- Recent Orders -->
   <div class="bg-white/80 backdrop-blur rounded-2xl shadow border border-gray-100 overflow-hidden mb-8">
     <div class="flex items-center justify-between p-4 border-b border-gray-100">
-      <h3 class="font-bold">📋 Recent Orders</h3>
-      <a href="/admins/orders.php" class="text-sm font-semibold" style="color:#FF6B6B;">View All →</a>
+      <h3 class="font-bold" data-translate>📋 Recent Orders</h3>
+      <a href="/admins/orders.php" class="text-sm font-semibold" style="color:#f68e9a;" data-translate>View All →</a>
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
         <thead><tr class="bg-gray-50 text-gray-500">
-          <th class="text-left p-3">Order</th><th class="text-left p-3">Table</th><th class="text-left p-3">Items</th><th class="text-left p-3">Total</th><th class="text-left p-3">Status</th><th class="text-left p-3">Time</th>
+          <th class="text-left p-3" data-translate>Order</th><th class="text-left p-3" data-translate>Table</th><th class="text-left p-3" data-translate>Items</th><th class="text-left p-3" data-translate>Total</th><th class="text-left p-3" data-translate>Status</th><th class="text-left p-3" data-translate>Time</th>
         </tr></thead>
         <tbody>
           <?php $recent = array_slice(array_reverse($orders), 0, 8); ?>
@@ -192,7 +192,7 @@ body{font-family:'Nunito',sans-serif;background:#FFF8F0;}h1,h2,h3{font-family:'F
           </tr>
           <?php endforeach; ?>
           <?php if (empty($recent)): ?>
-          <tr><td colspan="6" class="p-8 text-center text-gray-400">No orders yet — they'll appear here</td></tr>
+          <tr><td colspan="6" class="p-8 text-center text-gray-400" data-translate>No orders yet — they'll appear here</td></tr>
           <?php endif; ?>
         </tbody>
       </table>

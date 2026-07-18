@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       'end_date' => $_POST['end_date'] ?? '',
       'active' => isset($_POST['active']),
       'discount_percent' => intval($_POST['discount_percent'] ?? 0),
-      'bg_color' => $_POST['bg_color'] ?? '#FFE66D',
+      'bg_color' => $_POST['bg_color'] ?? '#f7b6bf',
       'created_at' => date('c')
     ];
     if (empty($newEvent['title'])) { $msg = '❌ Title is required.'; }
@@ -58,68 +58,68 @@ $csrfToken = $_SESSION['csrf_token'] ?? '';
 </head>
 <body>
 <nav class="max-w-7xl mx-auto px-4 py-4 flex items-center gap-3 flex-wrap">
-  <a href="/admins/dashboard.php" class="text-xl font-bold no-underline" style="color:#2D3436;">← Admin</a>
-  <span class="text-gray-400">/ Events</span>
+  <a href="/admins/dashboard.php" class="text-xl font-bold no-underline" style="color:var(--text);" data-translate>← Admin</a>
+  <span class="text-gray-400" data-translate>/ Events</span>
 </nav>
 <main class="max-w-4xl mx-auto px-4 pb-12">
-  <h1 class="text-3xl font-bold mb-2" style="color:#2D3436;">🎉 Events & Promotions</h1>
-  <p class="text-sm text-gray-400 mb-6">Create banners, popups, and discounts that show on customer pages during specific dates.</p>
+  <h1 class="text-3xl font-bold mb-2" style="color:var(--text);" data-translate>🎉 Events & Promotions</h1>
+  <p class="text-sm text-gray-400 mb-6" data-translate>Create banners, popups, and discounts that show on customer pages during specific dates.</p>
 
   <?php if ($msg): ?><div class="bg-green-50 border border-green-200 text-green-700 p-4 rounded-2xl mb-4 text-sm"><?=htmlspecialchars($msg)?></div><?php endif; ?>
 
-  <button onclick="openForm()" class="px-5 py-2.5 rounded-full font-bold text-white mb-6" style="background:#4ECDC4;">+ New Event</button>
+  <button onclick="openForm()" class="px-5 py-2.5 rounded-full font-bold text-white mb-6" style="background:#538bdf;" data-translate>+ New Event</button>
 
   <div id="eventForm" class="hidden bg-white/80 backdrop-blur rounded-2xl p-5 shadow border border-gray-100 mb-6">
-    <h3 class="font-bold mb-3" id="formTitle">New Event</h3>
+    <h3 class="font-bold mb-3" id="formTitle" data-translate>New Event</h3>
     <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-3">
       <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
       <input type="hidden" name="event_id" id="formId" value="" />
       <input type="hidden" name="add_event" id="formAction" value="1" />
       <div class="md:col-span-2">
-        <label class="text-xs text-gray-400 block mb-1">Event Title *</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>Event Title *</label>
         <input name="title" id="formTitleInput" placeholder="e.g. Weekend Special: 20% Off" required class="w-full px-4 py-2.5 rounded-full border border-gray-200 text-sm" />
       </div>
       <div class="md:col-span-2">
-        <label class="text-xs text-gray-400 block mb-1">Description</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>Description</label>
         <textarea name="description" id="formDesc" placeholder="Describe the offer or event..." rows="2" class="w-full px-4 py-2.5 rounded-2xl border border-gray-200 text-sm resize-none"></textarea>
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">Type</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>Type</label>
         <select name="type" id="formType" class="w-full px-4 py-2.5 rounded-full border border-gray-200 text-sm">
-          <option value="banner">📢 Banner (top of page)</option>
-          <option value="popup">🪟 Popup (on page load)</option>
-          <option value="discount">🏷️ Discount Badge</option>
+          <option value="banner" data-translate>📢 Banner (top of page)</option>
+          <option value="popup" data-translate>🪟 Popup (on page load)</option>
+          <option value="discount" data-translate>🏷️ Discount Badge</option>
         </select>
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">Discount % (0 = none)</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>Discount % (0 = none)</label>
         <input name="discount_percent" id="formDiscount" type="number" min="0" max="100" value="0" class="w-full px-4 py-2.5 rounded-full border border-gray-200 text-sm" />
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">Start Date</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>Start Date</label>
         <input name="start_date" id="formStart" type="date" class="w-full px-4 py-2.5 rounded-full border border-gray-200 text-sm" />
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">End Date</label>
+        <label class="text-xs text-gray-400 block mb-1" data-translate>End Date</label>
         <input name="end_date" id="formEnd" type="date" class="w-full px-4 py-2.5 rounded-full border border-gray-200 text-sm" />
       </div>
       <div>
-        <label class="text-xs text-gray-400 block mb-1">Background Color</label>
-        <input name="bg_color" id="formBg" type="color" value="#FFE66D" class="w-full h-10 rounded-full border border-gray-200 cursor-pointer" />
+        <label class="text-xs text-gray-400 block mb-1" data-translate>Background Color</label>
+        <input name="bg_color" id="formBg" type="color" value="#f7b6bf" class="w-full h-10 rounded-full border border-gray-200 cursor-pointer" />
       </div>
       <div class="flex items-center">
         <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="active" id="formActive" checked /> Active</label>
       </div>
       <div class="md:col-span-2">
-        <button type="submit" class="w-full px-5 py-3 rounded-full font-bold text-white" style="background:#4ECDC4;">Save Event</button>
+        <button type="submit" class="w-full px-5 py-3 rounded-full font-bold text-white" style="background:#538bdf;" data-translate>Save Event</button>
       </div>
     </form>
   </div>
 
   <?php if (empty($events)): ?>
   <div class="text-center py-12 text-gray-400 bg-white/60 rounded-2xl">
-    <div class="text-4xl mb-2">🎉</div>
-    <p>No events yet. Create your first promotion!</p>
+    <div class="text-4xl mb-2" data-translate>🎉</div>
+    <p data-translate>No events yet. Create your first promotion!</p>
   </div>
   <?php else: ?>
   <div class="space-y-3">
@@ -133,8 +133,8 @@ $csrfToken = $_SESSION['csrf_token'] ?? '';
     <div class="bg-white/80 backdrop-blur rounded-2xl p-4 shadow border border-gray-100 flex items-center justify-between gap-3 flex-wrap">
       <div class="flex-1 min-w-0">
         <div class="flex items-center gap-2 flex-wrap">
-          <span class="font-bold" style="color:#2D3436;"><?=htmlspecialchars($e['title'])?></span>
-          <span class="text-xs px-2 py-0.5 rounded-full" style="background:<?=$e['bg_color']??'#FFE66D'?>30;color:#2D3436;"><?=$typeLabel?></span>
+          <span class="font-bold" style="color:var(--text);"><?=htmlspecialchars($e['title'])?></span>
+          <span class="text-xs px-2 py-0.5 rounded-full" style="background:<?=$e['bg_color']??'#f7b6bf'?>30;color:var(--text);"><?=$typeLabel?></span>
           <?php if (!empty($e['discount_percent'])): ?><span class="text-xs font-bold text-red-500">-<?=intval($e['discount_percent'])?>%</span><?php endif; ?>
         </div>
         <?php if ($e['description'] ?? ''): ?><p class="text-xs text-gray-400 mt-1 truncate"><?=htmlspecialchars($e['description'])?></p><?php endif; ?>
@@ -148,14 +148,14 @@ $csrfToken = $_SESSION['csrf_token'] ?? '';
           <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
           <input type="hidden" name="toggle_event" value="1" />
           <input type="hidden" name="event_id" value="<?=htmlspecialchars($e['id'])?>" />
-          <button type="submit" class="text-xs px-3 py-1.5 rounded-full font-bold" style="background:<?=$isActive?'#FF6B6B':'#4ECDC4'?>;color:#fff;border:none;cursor:pointer;"><?=$isActive?'Deactivate':'Activate'?></button>
+          <button type="submit" class="text-xs px-3 py-1.5 rounded-full font-bold" style="background:<?=$isActive?'#f68e9a':'#538bdf'?>;color:#fff;border:none;cursor:pointer;"><?=$isActive?'Deactivate':'Activate'?></button>
         </form>
-        <button onclick="editEvent('<?=htmlspecialchars($e['id'], ENT_QUOTES)?>','<?=htmlspecialchars($e['title'], ENT_QUOTES)?>','<?=htmlspecialchars($e['description'] ?? '', ENT_QUOTES)?>','<?=htmlspecialchars($e['type'] ?? 'banner')?>','<?=htmlspecialchars($e['start_date'] ?? '')?>','<?=htmlspecialchars($e['end_date'] ?? '')?>',<?=intval($e['discount_percent'] ?? 0)?>,'<?=htmlspecialchars($e['bg_color'] ?? '#FFE66D')?>',<?=!empty($e['active'])?'true':'false'?>)" class="text-blue-500 text-xs font-bold" style="border:none;background:none;cursor:pointer;">Edit</button>
+        <button onclick="editEvent('<?=htmlspecialchars($e['id'], ENT_QUOTES)?>','<?=htmlspecialchars($e['title'], ENT_QUOTES)?>','<?=htmlspecialchars($e['description'] ?? '', ENT_QUOTES)?>','<?=htmlspecialchars($e['type'] ?? 'banner')?>','<?=htmlspecialchars($e['start_date'] ?? '')?>','<?=htmlspecialchars($e['end_date'] ?? '')?>',<?=intval($e['discount_percent'] ?? 0)?>,'<?=htmlspecialchars($e['bg_color'] ?? '#f7b6bf')?>',<?=!empty($e['active'])?'true':'false'?>)" class="text-blue-500 text-xs font-bold" style="border:none;background:none;cursor:pointer;">Edit</button>
         <form method="POST" class="inline" onsubmit="return confirm('Delete this event?')">
           <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
           <input type="hidden" name="delete_event" value="1" />
           <input type="hidden" name="event_id" value="<?=htmlspecialchars($e['id'])?>" />
-          <button type="submit" class="text-red-500 text-xs font-bold" style="border:none;background:none;cursor:pointer;">Delete</button>
+          <button type="submit" class="text-red-500 text-xs font-bold" style="border:none;background:none;cursor:pointer;" data-translate>Delete</button>
         </form>
       </div>
     </div>

@@ -1,24 +1,58 @@
-let lastMsgId = 0;
-let isPolling = true;
-let pollErrorCount = 0;
+var lastMsgId = 0;
+var isPolling = true;
+var pollErrorCount = 0;
 
 function getTableNum() {
-  const el = document.getElementById('chatContainer');
+  var el = document.getElementById('chatContainer');
   return el ? parseInt(el.dataset.table) || 0 : 0;
 }
 
-function setStatus(msg, isError) {
-  const el = document.getElementById('chatStatus');
-  if (el) { el.textContent = msg; el.style.color = isError ? '#FF6B6B' : '#999'; }
+function setStatus(msg, type) {
+  var el = document.getElementById('chatStatus');
+  var dot = document.getElementById('statusDot');
+  if (!el) return;
+  el.textContent = msg;
+  if (type === 'error') { el.style.color = '#f68e9a'; if (dot) { dot.className = 'status-dot offline'; } }
+  else if (type === 'connected') { el.style.color = '#2ecc71'; if (dot) { dot.className = 'status-dot online'; } }
+  else { el.style.color = '#999'; if (dot) { dot.className = 'status-dot connecting'; } }
+}
+
+function timeStr() {
+  var d = new Date();
+  return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+}
+
+function appendMessage(text, from) {
+  var container = document.getElementById('chatMessages');
+  if (!container) return;
+  var div = document.createElement('div');
+  div.className = 'chat-msg ' + (from === 'table' ? 'table' : 'admin');
+  var span = document.createElement('span');
+  span.textContent = text;
+  div.appendChild(span);
+  var time = document.createElement('div');
+  time.className = 'msg-time';
+  time.textContent = timeStr();
+  if (from === 'table') {
+    var status = document.createElement('span');
+    status.className = 'msg-status';
+    status.textContent = '✓';
+    time.appendChild(status);
+  }
+  div.appendChild(time);
+  container.appendChild(div);
+  var chatContainer = document.getElementById('chatContainer') || document.querySelector('.chat-messages');
+  if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 function pollMessages() {
   if (!isPolling) return;
-  const table = getTableNum();
+  var table = getTableNum();
   fetch('/api/talk/read.php?table=' + table + '&after=' + lastMsgId + '&_=' + Date.now())
     .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function(data) {
       pollErrorCount = 0;
+      setStatus('Connected', 'connected');
       if (data && Array.isArray(data)) {
         data.forEach(function(msg) {
           if (msg.id > lastMsgId) {
@@ -27,33 +61,22 @@ function pollMessages() {
           }
         });
       }
-      setStatus('Connected');
     })
     .catch(function(e) {
       pollErrorCount++;
-      if (pollErrorCount === 1) setStatus('Connecting...', true);
-      if (pollErrorCount >= 3) setStatus('Connection issue — check server', true);
+      if (pollErrorCount === 1) setStatus('Connecting...', 'error');
+      if (pollErrorCount >= 3) setStatus('Connection issue', 'error');
     });
   setTimeout(pollMessages, 2000);
 }
 
-function appendMessage(text, from) {
-  const container = document.getElementById('chatMessages');
-  if (!container) return;
-  const div = document.createElement('div');
-  div.className = 'chat-msg ' + (from === 'table' ? 'table' : 'admin');
-  div.textContent = text;
-  container.appendChild(div);
-  const chatContainer = document.getElementById('chatContainer');
-  if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
 function sendMessage() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
+  var input = document.getElementById('chatInput');
+  var text = input.value.trim();
   if (!text) return;
-  const table = getTableNum();
+  var table = getTableNum();
   input.disabled = true;
+  setStatus('Sending...');
   fetch('/api/talk/send.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -64,23 +87,32 @@ function sendMessage() {
     if (data.success) {
       appendMessage(text, 'table');
       input.value = '';
+      setStatus('Connected', 'connected');
     } else {
-      setStatus('Send failed: ' + (data.error || 'unknown'), true);
+      setStatus('Send failed', 'error');
     }
   })
   .catch(function(e) {
-    setStatus('Network error sending message', true);
+    setStatus('Network error', 'error');
   })
   .then(function() { input.disabled = false; input.focus(); });
 }
 
+function showTyping(show) {
+  var el = document.getElementById('typingIndicator');
+  if (el) el.classList.toggle('show', show);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('sendBtn')?.addEventListener('click', sendMessage);
-  document.getElementById('chatInput')?.addEventListener('keydown', function(e) {
+  var sendBtn = document.getElementById('sendBtn');
+  var chatInput = document.getElementById('chatInput');
+  if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+  if (chatInput) chatInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') sendMessage();
   });
+
   document.getElementById('callBtn')?.addEventListener('click', function() {
-    const table = getTableNum();
+    var table = getTableNum();
     fetch('/api/talk/request-call.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -100,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  setStatus('Loading...');
+  setStatus('Connecting...');
   fetch('/api/talk/read.php?table=' + getTableNum() + '&_=' + Date.now())
     .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function(data) {
@@ -112,8 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         });
       }
-      setStatus('Connected');
+      setStatus('Connected', 'connected');
     })
-    .catch(function() { setStatus('Could not connect to chat server', true); });
+    .catch(function() { setStatus('Could not connect', 'error'); });
   pollMessages();
 });

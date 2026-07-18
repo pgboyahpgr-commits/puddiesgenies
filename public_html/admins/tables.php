@@ -63,20 +63,20 @@ body{font-family:'Nunito',sans-serif;background:#FFF8F0;}h1,h2,h3{font-family:'F
 </head>
 <body>
 <nav class="max-w-7xl mx-auto px-4 py-4 flex items-center gap-3 flex-wrap no-print">
-  <a href="/admins/dashboard.php" class="text-xl font-bold no-underline" style="color:#2D3436;">← SmakAI Admin</a>
-  <span class="text-gray-400">/ Tables</span>
+  <a href="/admins/dashboard.php" class="text-xl font-bold no-underline" style="color:var(--text);" data-translate>← SmakAI Admin</a>
+  <span class="text-gray-400" data-translate>/ Tables</span>
 </nav>
 <main class="max-w-7xl mx-auto px-4 pb-12">
   <div class="flex items-center justify-between mb-4 flex-wrap gap-3 no-print">
-    <h1 class="text-3xl font-bold" style="color:#2D3436;">📋 Tables</h1>
+    <h1 class="text-3xl font-bold" style="color:var(--text);" data-translate>📋 Tables</h1>
     <div class="flex gap-2">
       <form method="POST" class="flex gap-2">
         <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
         <input type="hidden" name="action" value="add" />
         <input type="number" name="number" placeholder="Table #" required class="px-3 py-2 rounded-full border border-gray-200 text-sm w-28" />
-        <button type="submit" class="px-4 py-2 rounded-full font-bold text-white" style="background:#4ECDC4;">+ Add</button>
+        <button type="submit" class="px-4 py-2 rounded-full font-bold text-white" style="background:#538bdf;" data-translate>+ Add</button>
       </form>
-      <button onclick="window.print()" class="px-4 py-2 rounded-full font-bold" style="background:#FFE66D;color:#2D3436;">🖨️ Print All</button>
+      <button onclick="window.print()" class="px-4 py-2 rounded-full font-bold" style="background:#f7b6bf;color:var(--text);" data-translate>🖨️ Print All</button>
     </div>
   </div>
 
@@ -85,7 +85,7 @@ body{font-family:'Nunito',sans-serif;background:#FFF8F0;}h1,h2,h3{font-family:'F
       $tableUrl = $siteUrl . '/menu.php?t=' . $t['token'];
     ?>
     <div class="bg-white/80 backdrop-blur rounded-2xl p-4 shadow border border-gray-100 text-center">
-      <h2 class="text-lg font-bold mb-1" style="color:#2D3436;">Table <?=$t['number']?></h2>
+      <h2 class="text-lg font-bold mb-1" style="color:var(--text);">Table <?=$t['number']?></h2>
       <p class="text-xs text-gray-400 mb-2 font-mono break-all"><?=htmlspecialchars($tableUrl)?></p>
       
       <div class="flex justify-center mb-3">
@@ -119,19 +119,19 @@ body{font-family:'Nunito',sans-serif;background:#FFF8F0;}h1,h2,h3{font-family:'F
           <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
           <input type="hidden" name="action" value="regenerate" />
           <input type="hidden" name="number" value="<?=$t['number']?>" />
-          <button type="submit" class="px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-600" onclick="return confirm('Regenerate token for Table <?=$t['number']?>? Old QR codes will stop working.')">🔄 New Token</button>
+          <button type="submit" class="px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-600" onclick="return confirm('Regenerate token for Table <?=$t['number']?>? Old QR codes will stop working.')" data-translate>🔄 New Token</button>
         </form>
         <form method="POST" onsubmit="return confirm('Delete Table <?=$t['number']?>?')">
           <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
           <input type="hidden" name="action" value="delete" />
           <input type="hidden" name="number" value="<?=$t['number']?>" />
-          <button type="submit" class="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-600">🗑️ Delete</button>
+          <button type="submit" class="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-600" data-translate>🗑️ Delete</button>
         </form>
       </div>
     </div>
     <?php endforeach; ?>
     <?php if (empty($tables['tables'])): ?>
-    <div class="col-span-full text-center py-12 text-gray-400">No tables configured. Add one above.</div>
+    <div class="col-span-full text-center py-12 text-gray-400" data-translate>No tables configured. Add one above.</div>
     <?php endif; ?>
   </div>
 </main>

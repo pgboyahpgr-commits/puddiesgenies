@@ -1,13 +1,23 @@
 window.SmakAI = window.SmakAI || {};
 
-// ─── OpenRouter API via PHP proxy ───────────────────────────────
-SmakAI.callOpenRouter = function(messages, model) {
-  model = model || 'openrouter/free';
+// ─── AI Chat via pollinations (free, no key) ────────────────────
+SmakAI.callAI = function(messages) {
+  return fetch('/api/ai-chat.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: messages })
+  }).then(function(r) { return r.json(); });
+};
+
+// ─── OpenRouter API via PHP proxy (fallback) ────────────────────
+SmakAI.callOpenRouter = function(messages) {
   return fetch('/api/proxy.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: messages, model: model })
-  }).then(function(r) { return r.json(); });
+    body: JSON.stringify({ messages: messages })
+  }).then(function(r) {
+    try { return r.json(); } catch(e) { return { success: false }; }
+  });
 };
 
 SmakAI.checkAiHealth = function() {
@@ -179,12 +189,7 @@ SmakAI.getRecommendation = function(query, allDishes) {
     }
   ];
 
-  return SmakAI.callOpenRouter(messages).then(function(data) {
-    if (!data.success || !data.content) {
-      // Fallback to local search
-      return { success: true, text: "Here's what I found:", dishes: SmakAI.searchDishes(query, allDishes), provider: 'local' };
-    }
-
+  function parseResponse(data) {
     var lines = data.content.split('\n');
     var names = [];
     for (var i = 0; i < lines.length; i++) {
@@ -192,8 +197,6 @@ SmakAI.getRecommendation = function(query, allDishes) {
       line = line.replace(/^[\d\s\.\-\)]+/, '');
       if (line.length > 2) names.push(line);
     }
-
-    // Match names against menu
     var matched = [];
     for (var n = 0; n < names.length; n++) {
       var target = names[n].toLowerCase();
@@ -201,33 +204,32 @@ SmakAI.getRecommendation = function(query, allDishes) {
       var bestScore = 0;
       for (var di = 0; di < allDishes.length; di++) {
         var dn = (allDishes[di].name || '').toLowerCase();
-        var pct = 0;
-        // Simple similarity
         var minLen = Math.min(target.length, dn.length);
         var matches = 0;
-        for (var ch = 0; ch < minLen; ch++) {
-          if (target[ch] === dn[ch]) matches++;
-        }
-        pct = (matches / Math.max(target.length, dn.length)) * 100;
-        if (pct > bestScore) {
-          bestScore = pct;
-          best = allDishes[di];
-        }
+        for (var ch = 0; ch < minLen; ch++) { if (target[ch] === dn[ch]) matches++; }
+        var pct = (matches / Math.max(target.length, dn.length)) * 100;
+        if (pct > bestScore) { bestScore = pct; best = allDishes[di]; }
       }
-      if (best && bestScore > 60 && matched.indexOf(best) < 0) {
-        matched.push(best);
-      }
+      if (best && bestScore > 60 && matched.indexOf(best) < 0) matched.push(best);
     }
-
-    // Apply exclusion filter
     matched = SmakAI.applyExclusionFilter(matched, query);
+    return matched;
+  }
 
-    if (matched.length) {
-      return { success: true, text: "Here's what I found for \"" + query + "\":", dishes: matched.slice(0, 5), provider: 'openrouter' };
+  return SmakAI.callAI(messages).then(function(data) {
+    if (data.success && data.content) {
+      var matched = parseResponse(data);
+      if (matched.length) return { success: true, text: "Here's what I found for \"" + query + "\":", dishes: matched.slice(0, 5), provider: 'pollinations' };
     }
-
-    // Fallback to local search
-    return { success: true, text: "Here's what I found:", dishes: SmakAI.searchDishes(query, allDishes), provider: 'local' };
+    // Try OpenRouter as second fallback
+    return SmakAI.callOpenRouter(messages).then(function(data2) {
+      if (data2.success && data2.content) {
+        var matched2 = parseResponse(data2);
+        if (matched2.length) return { success: true, text: "Here's what I found for \"" + query + "\":", dishes: matched2.slice(0, 5), provider: 'openrouter' };
+      }
+      // Final fallback to local search
+      return { success: true, text: "Here's what I found:", dishes: SmakAI.searchDishes(query, allDishes), provider: 'local' };
+    });
   });
 };
 
@@ -266,11 +268,17 @@ SmakAI.getAkinatorQuestion = function(state) {
     { role: 'user', content: conversation }
   ];
 
-  return SmakAI.callOpenRouter(messages).then(function(data) {
+  return SmakAI.callAI(messages).then(function(data) {
     if (data.success && data.content) {
       return { question: data.content.trim(), fallback: false };
     }
-    return null;
+    // Fallback to OpenRouter
+    return SmakAI.callOpenRouter(messages).then(function(data2) {
+      if (data2.success && data2.content) {
+        return { question: data2.content.trim(), fallback: false };
+      }
+      return null;
+    });
   });
 };
 

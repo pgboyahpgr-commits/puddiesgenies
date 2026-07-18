@@ -1,14 +1,12 @@
 <?php
-require_once __DIR__ . '/../includes/auth.php';
-requireAdmin();
+require_once __DIR__ . '/../includes/admin-header.php';
 $adminFile = __DIR__ . '/../data/admin.json';
 $admin = loadJSON($adminFile);
 $msg = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? '')) {
-    $msg = '❌ Security token expired. Please try again.';
-  } elseif (isset($_POST['update_creds'])) {
+  requireCSRF();
+  if (isset($_POST['update_creds'])) {
     $newId = trim($_POST['new_id'] ?? '');
     $newPass = trim($_POST['new_password'] ?? '');
     if ($newId && $newPass) {
@@ -16,9 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $admin['password'] = password_hash($newPass, PASSWORD_BCRYPT);
       saveJSON($adminFile, $admin);
       $msg = '✅ Credentials updated!';
-    } else {
-      $msg = '❌ Both ID and password are required.';
-    }
+    } else { $msg = '❌ Both ID and password are required.'; }
   }
   if (isset($_POST['clear_orders'])) {
     file_put_contents(__DIR__ . '/../data/orders.json', '[]', LOCK_EX);
@@ -28,59 +24,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     file_put_contents(__DIR__ . '/../data/stream_config.json', json_encode(['video_url'=>'','video_status'=>'off','last_updated'=>''], JSON_PRETTY_PRINT), LOCK_EX);
     $msg = '✅ Stream config reset!';
   }
+  if (isset($_POST['clear_chat'])) {
+    $msgDir = __DIR__ . '/../data/messages';
+    if (is_dir($msgDir)) {
+      $files = glob($msgDir . '/*.json');
+      foreach ($files as $f) { @unlink($f); }
+      $msg = '✅ All chat messages cleared!';
+    }
+  }
+  if (isset($_POST['clear_call_requests'])) {
+    file_put_contents(__DIR__ . '/../data/call_requests.json', '[]', LOCK_EX);
+    file_put_contents(__DIR__ . '/../data/active_calls.json', '[]', LOCK_EX);
+    $msg = '✅ Call requests cleared!';
+  }
 }
-$csrfToken = $_SESSION['csrf_token'] ?? '';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Settings — SmakAI Admin</title>
-<script src="https://cdn.tailwindcss.com"></script><link href="https://fonts.googleapis.com/css2?family=Fredoka&family=Nunito&display=swap" rel="stylesheet"/>
-<style>body{font-family:'Nunito',sans-serif;background:#FFF8F0;}h1,h2,h3{font-family:'Fredoka',sans-serif;}</style>
-</head>
-<body>
-<nav class="max-w-7xl mx-auto px-4 py-4 flex items-center gap-3">
-  <a href="/admins/dashboard.php" class="text-xl font-bold no-underline" style="color:#2D3436;">← SmakAI Admin</a>
-  <span class="text-gray-400">/ Settings</span>
-</nav>
-<main class="max-w-2xl mx-auto px-4 pb-12">
-  <h1 class="text-3xl font-bold mb-6" style="color:#2D3436;">⚙️ Settings</h1>
+<main class="max-w-2xl mx-auto px-4 pb-12" style="margin-top:20px;">
+  <h1 class="text-3xl font-bold mb-6" style="color:var(--text);" data-translate>⚙️ Settings</h1>
   <?php if ($msg): ?><div class="bg-green-50 border border-green-200 text-green-700 p-4 rounded-2xl mb-4 text-sm"><?=htmlspecialchars($msg)?></div><?php endif; ?>
 
-  <div class="bg-white/80 backdrop-blur rounded-2xl p-5 shadow border border-gray-100 mb-4">
-    <h3 class="font-bold mb-3">🔐 Change Admin Credentials</h3>
+  <div class="card p-5 mb-4">
+    <h3 class="font-bold mb-3" data-translate>🔐 Change Admin Credentials</h3>
     <form method="POST" class="flex flex-col gap-3">
       <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
-      <input name="new_id" placeholder="New Admin ID" required class="px-4 py-3 rounded-full border-2 border-gray-200 outline-none focus:border-[#FF6B6B] text-sm" />
-      <input name="new_password" placeholder="New Password (min 6 chars)" required minlength="6" class="px-4 py-3 rounded-full border-2 border-gray-200 outline-none focus:border-[#FF6B6B] text-sm" />
-      <button name="update_creds" class="px-6 py-3 rounded-full font-bold text-white" style="background:#FF6B6B;">Update Credentials</button>
+      <input name="new_id" placeholder="New Admin ID" required class="input-field" />
+      <input name="new_password" placeholder="New Password (min 6 chars)" required minlength="6" class="input-field" />
+      <button name="update_creds" class="btn btn-primary" data-translate>Update Credentials</button>
     </form>
   </div>
 
-  <div class="bg-white/80 backdrop-blur rounded-2xl p-5 shadow border border-gray-100 mb-4">
-    <h3 class="font-bold mb-3 text-red-500">⚠️ Danger Zone</h3>
+  <div class="card p-5 mb-4">
+    <h3 class="font-bold mb-3" data-translate>🔄 Refresh Menu</h3>
+    <p class="text-sm text-gray-500 mb-3" data-translate>Force-refresh menu cache from GitHub Gist</p>
+    <a href="/admins/sync-menu.php" class="btn" style="background:#538bdf;color:#fff;" data-translate>Refresh Menu</a>
+  </div>
+
+  <div class="card p-5 mb-4">
+    <h3 class="font-bold mb-3" data-translate>🖼️ Update Dish Images</h3>
+    <p class="text-sm text-gray-500 mb-3" data-translate>Fetch real food images from Wikimedia Commons</p>
+    <a href="/admins/update-images.php?offset=0" class="btn" style="background:#538bdf;color:#fff;" data-translate>Start Batch Update</a>
+  </div>
+
+  <div class="card p-5 mb-4" style="border-color:rgba(174,40,36,0.2);">
+    <h3 class="font-bold mb-3" style="color:#ae2824;" data-translate>⚠️ Admin Actions</h3>
     <div class="flex flex-col gap-3">
-      <form method="POST" onsubmit="return confirm('Clear ALL orders? This cannot be undone.')">
+      <form method="POST" onsubmit="return confirm('Clear ALL orders? Cannot be undone.')">
         <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
-        <button name="clear_orders" class="px-6 py-3 rounded-full font-bold text-white w-full" style="background:#FF6B6B;">🗑️ Clear All Orders</button>
+        <button name="clear_orders" class="btn w-full" style="background:#f68e9a;color:#fff;" data-translate>🗑️ Clear All Orders</button>
       </form>
-      <form method="POST" onsubmit="return confirm('Reset stream config?')">
+      <form method="POST" onsubmit="return confirm('Clear ALL chat messages?')">
         <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
-        <button name="reset_stream" class="px-6 py-3 rounded-full font-bold w-full" style="background:rgba(255,255,255,0.6);border:1px solid #ddd;color:#2D3436;">🔄 Reset Stream Config</button>
+        <button name="clear_chat" class="btn w-full" style="background:var(--border-light);color:var(--text);" data-translate>💬 Clear Chat Messages</button>
+      </form>
+      <form method="POST" onsubmit="return confirm('Clear ALL call requests?')">
+        <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
+        <button name="clear_call_requests" class="btn w-full" style="background:var(--border-light);color:var(--text);" data-translate>📞 Clear Call Requests</button>
+      </form>
+      <form method="POST" onsubmit="return confirm('Reset stream configuration?')">
+        <input type="hidden" name="csrf_token" value="<?=$csrfToken?>" />
+        <button name="reset_stream" class="btn w-full" style="background:var(--border-light);color:var(--text);" data-translate>🔄 Reset Stream Config</button>
       </form>
     </div>
   </div>
-
-  <div class="bg-white/80 backdrop-blur rounded-2xl p-5 shadow border border-gray-100 mb-4">
-    <h3 class="font-bold mb-3">🔄 Sync Menu from Gist</h3>
-    <p class="text-sm text-gray-500 mb-3">Force-refresh the menu cache from GitHub Gist (clears local cache)</p>
-    <a href="/admins/sync-menu.php" class="inline-block px-6 py-3 rounded-full font-bold text-white" style="background:#4ECDC4;">Refresh Menu</a>
-  </div>
-
-  <div class="bg-white/80 backdrop-blur rounded-2xl p-5 shadow border border-gray-100">
-    <h3 class="font-bold mb-3">🖼️ Update Dish Images</h3>
-    <p class="text-sm text-gray-500 mb-3">Fetch real food images from Wikimedia Commons for all dishes</p>
-    <a href="/admins/update-images.php?offset=0" class="inline-block px-6 py-3 rounded-full font-bold text-white" style="background:#4ECDC4;">Start Batch Update</a>
-  </div>
 </main>
+</div>
 </body>
 </html>

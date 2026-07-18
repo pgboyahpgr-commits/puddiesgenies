@@ -32,6 +32,7 @@ $orderId = 'ORD' . date('Ymd') . str_pad(count($orders) + 1, 4, '0', STR_PAD_LEF
 $orders[] = [
   'order_id' => $orderId,
   'table' => $table,
+  'customer_name' => trim($input['customer_name'] ?? ''),
   'items' => $input['items'],
   'total' => $total,
   'instructions' => trim($input['instructions'] ?? ''),

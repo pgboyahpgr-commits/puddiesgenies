@@ -9,10 +9,10 @@
 <div id="mobileCartBar" class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 shadow-lg px-4 py-3 z-50 hidden" style="transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);">
   <div class="max-w-6xl mx-auto flex items-center justify-between">
     <div>
-      <span id="mobileCartCount" class="font-bold text-sm">0 items</span>
-      <span id="mobileCartTotal" class="font-bold text-lg ml-3" style="color:#FF6B6B;">₹0</span>
+      <span id="mobileCartCount" class="font-bold text-sm" data-translate>0 items</span>
+      <span id="mobileCartTotal" class="font-bold text-lg ml-3" style="color:#f68e9a;" data-translate>₹0</span>
     </div>
-    <a href="/checkout.php" class="btn-bouncy px-8 py-2.5 no-underline text-sm font-bold" style="background:#FF6B6B;color:#fff;">View Cart →</a>
+    <a href="/checkout.php" class="btn-bouncy px-8 py-2.5 no-underline text-sm font-bold" style="background:#f68e9a;color:#fff;" data-translate>View Cart →</a>
   </div>
 </div>
 
@@ -25,9 +25,9 @@
 
 <style>
 #floatCartBtn { position:fixed; bottom:28px; right:28px; z-index:999; display:none; }
-.float-cart-inner { width:60px; height:60px; border-radius:50%; background:#FF6B6B; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(255,107,107,0.4); cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; position:relative; }
+.float-cart-inner { width:60px; height:60px; border-radius:50%; background:#f68e9a; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(255,107,107,0.4); cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; position:relative; }
 .float-cart-inner:hover { transform:scale(1.1); box-shadow:0 6px 28px rgba(255,107,107,0.55); }
-#floatCartCount { position:absolute; top:-4px; right:-4px; background:#2D3436; color:#fff; font-size:11px; font-weight:700; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #FF6B6B; }
+#floatCartCount { position:absolute; top:-4px; right:-4px; background:var(--text); color:#fff; font-size:11px; font-weight:700; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #f68e9a; }
 .float-cart-pulse { animation:floatPulse 1.5s ease-in-out infinite; }
 @keyframes floatPulse { 0%,100%{transform:scale(1);box-shadow:0 4px 20px rgba(255,107,107,0.4);} 50%{transform:scale(1.08);box-shadow:0 4px 32px rgba(255,107,107,0.6);} }
 </style>

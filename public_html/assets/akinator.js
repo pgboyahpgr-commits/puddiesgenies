@@ -6,6 +6,7 @@ var wrongIndex = -1;
 var gameOver = false;
 var currentMode = 'guess';
 var guessConversation = [];
+var startupRetries = 0;
 
 // ─── Menu Data Loader ───────────────────────────────────────────
 function loadAllDishes() {
@@ -68,6 +69,7 @@ function extractDishes(menuData) {
 
 // ─── Init ───────────────────────────────────────────────────────
 function initAkinator() {
+  startupRetries = 0;
   return loadAllDishes();
 }
 
@@ -79,18 +81,26 @@ function switchMode(mode) {
   var guessBtn = document.getElementById('modeGuess');
   var chatBtn = document.getElementById('modeChat');
   if (mode === 'guess') {
-    guessBtn.style.background = '#FF6B6B'; guessBtn.style.color = '#fff';
+    guessBtn.style.background = '#f68e9a'; guessBtn.style.color = '#fff';
     chatBtn.style.background = 'rgba(255,255,255,0.6)'; chatBtn.style.border = '1px solid #ddd'; chatBtn.style.color = '#2D3436';
     startNewGame();
   } else {
-    chatBtn.style.background = '#FF6B6B'; chatBtn.style.color = '#fff';
+    chatBtn.style.background = '#f68e9a'; chatBtn.style.color = '#fff';
     guessBtn.style.background = 'rgba(255,255,255,0.6)'; guessBtn.style.border = '1px solid #ddd'; guessBtn.style.color = '#2D3436';
   }
 }
 
 // ─── Akinator Game ──────────────────────────────────────────────
 function startNewGame() {
-  if (!allDishes.length) { initAkinator().then(startNewGame); return; }
+  if (!allDishes.length) {
+    if (startupRetries < 3) { startupRetries++; initAkinator().then(startNewGame); return; }
+    var qt = document.getElementById('questionText');
+    if (qt) qt.textContent = '⚠️ Could not load menu. Check connection and refresh.';
+    var st = document.getElementById('statusText');
+    if (st) st.textContent = 'Connection error';
+    return;
+  }
+  startupRetries = 0;
   probabilities = allDishes.map(function() { return 1 / allDishes.length; });
   askedKeys = new Set();
   currentQ = 0;
@@ -207,7 +217,7 @@ function updateCandidates() {
   list.innerHTML = items.map(function(item, i) {
     var pct = Math.round(item.p * 100);
     if (pct < 1) return '';
-    return '<span class="px-3 py-1 rounded-full text-sm ' + (i === 0 ? 'bg-[#FF6B6B] text-white font-bold' : 'bg-gray-100 text-gray-600') + '">' + item.dish.name + ' (' + pct + '%)</span>';
+    return '<span class="px-3 py-1 rounded-full text-sm ' + (i === 0 ? 'bg-[#f68e9a] text-white font-bold' : 'bg-gray-100 text-gray-600') + '">' + item.dish.name + ' (' + pct + '%)</span>';
   }).join('');
 }
 
@@ -221,7 +231,7 @@ function aiChatSend() {
   // User message
   var userDiv = document.createElement('div');
   userDiv.className = 'flex gap-3 items-start flex-row-reverse';
-  userDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#4ECDC4] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">You</div><div class="bg-[#4ECDC4]/10 rounded-2xl rounded-tr-sm px-4 py-3 text-sm max-w-[80%]" style="border:1px solid #ddd;">' + escapeHtml(text) + '</div>';
+  userDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#538bdf] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">You</div><div class="bg-[#538bdf]/10 rounded-2xl rounded-tr-sm px-4 py-3 text-sm max-w-[80%]" style="border:1px solid #ddd;">' + escapeHtml(text) + '</div>';
   container.appendChild(userDiv);
 
   input.value = '';
@@ -236,7 +246,7 @@ function aiChatSend() {
   var loadingDiv = document.createElement('div');
   loadingDiv.className = 'flex gap-3 items-start';
   loadingDiv.id = 'aiLoading';
-  loadingDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#FF6B6B] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div><div class="bg-white/80 rounded-2xl rounded-tl-sm px-4 py-3 text-sm" style="border:1px solid #eee;"><span class="inline-block animate-pulse" id="aiProgressMsg">' + progressMsgs[0] + '</span></div>';
+  loadingDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#f68e9a] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div><div class="bg-white/80 rounded-2xl rounded-tl-sm px-4 py-3 text-sm" style="border:1px solid #eee;"><span class="inline-block animate-pulse" id="aiProgressMsg">' + progressMsgs[0] + '</span></div>';
   container.appendChild(loadingDiv);
   container.scrollTop = container.scrollHeight;
 
@@ -257,7 +267,7 @@ function aiChatSend() {
       if (data.text) {
         var textDiv = document.createElement('div');
         textDiv.className = 'flex gap-3 items-start';
-        textDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#FF6B6B] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div>'
+        textDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#f68e9a] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div>'
           + '<div class="bg-white/80 rounded-2xl rounded-tl-sm px-4 py-3 text-sm max-w-[80%]" style="border:1px solid #eee;">'
           + escapeHtml(data.text) + '</div>';
         container.appendChild(textDiv);
@@ -265,7 +275,7 @@ function aiChatSend() {
       if (data.dishes && data.dishes.length > 0) {
         var cardsDiv = document.createElement('div');
         cardsDiv.className = 'flex gap-3 items-start';
-        cardsDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#FF6B6B] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div>'
+        cardsDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#f68e9a] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div>'
           + '<div class="flex-1 space-y-2">' + data.dishes.map(function(d) { return renderDishCard(d); }).join('') + '</div>';
         container.appendChild(cardsDiv);
       }
@@ -275,19 +285,19 @@ function aiChatSend() {
       if (local.length) {
         var textDiv = document.createElement('div');
         textDiv.className = 'flex gap-3 items-start';
-        textDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#FF6B6B] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div>'
+        textDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#f68e9a] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div>'
           + '<div class="bg-white/80 rounded-2xl rounded-tl-sm px-4 py-3 text-sm max-w-[80%]" style="border:1px solid #eee;">Here is what I found for "' + escapeHtml(text) + '":</div>';
         container.appendChild(textDiv);
         var cardsDiv = document.createElement('div');
         cardsDiv.className = 'flex gap-3 items-start';
-        cardsDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#FF6B6B] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div>'
+        cardsDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#f68e9a] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div>'
           + '<div class="flex-1 space-y-2">' + local.map(function(d) { return renderDishCard(d); }).join('') + '</div>';
         container.appendChild(cardsDiv);
       } else {
         var errDiv = document.createElement('div');
         errDiv.className = 'flex gap-3 items-start';
-        errDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#FF6B6B] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div>'
-          + '<div class="bg-white/80 rounded-2xl rounded-tl-sm px-4 py-3 text-sm max-w-[80%]" style="border:1px solid #eee;color:#FF6B6B;">'
+        errDiv.innerHTML = '<div class="w-8 h-8 rounded-full bg-[#f68e9a] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">AI</div>'
+          + '<div class="bg-white/80 rounded-2xl rounded-tl-sm px-4 py-3 text-sm max-w-[80%]" style="border:1px solid #eee;color:#f68e9a;">'
           + 'Sorry, I couldn\'t find anything matching that. Try asking about a specific dish or ingredient!</div>';
         container.appendChild(errDiv);
       }
@@ -345,10 +355,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   checkAiHealth();
 
-  document.getElementById('modeGuess')?.addEventListener('click', function() { switchMode('guess'); });
-  document.getElementById('modeChat')?.addEventListener('click', function() { switchMode('chat'); });
-  document.getElementById('resetBtn')?.addEventListener('click', startNewGame);
-  document.getElementById('wrongBtn')?.addEventListener('click', function() {
+  var el;
+  if ((el = document.getElementById('modeGuess'))) el.addEventListener('click', function() { switchMode('guess'); });
+  if ((el = document.getElementById('modeChat'))) el.addEventListener('click', function() { switchMode('chat'); });
+  if ((el = document.getElementById('resetBtn'))) el.addEventListener('click', startNewGame);
+  if ((el = document.getElementById('wrongBtn'))) el.addEventListener('click', function() {
     if (wrongIndex >= 0) {
       probabilities[wrongIndex] = 0;
       var sum = probabilities.reduce(function(a, b) { return a + b; }, 0);
@@ -370,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function() {
     quickBtns[i].addEventListener('click', function() { handleAnswer(this.dataset.ans); });
   }
 
-  document.getElementById('answerBtn')?.addEventListener('click', function() {
+  if ((el = document.getElementById('answerBtn'))) el.addEventListener('click', function() {
     var input = document.getElementById('customAnswer');
     if (!input) return;
     var val = input.value.toLowerCase().trim();
@@ -385,11 +396,21 @@ document.addEventListener('DOMContentLoaded', function() {
     input.value = '';
   });
 
-  document.getElementById('customAnswer')?.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') document.getElementById('answerBtn')?.click();
+  if ((el = document.getElementById('customAnswer'))) el.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { var btn = document.getElementById('answerBtn'); if (btn) btn.click(); }
   });
-  document.getElementById('aiChatSend')?.addEventListener('click', aiChatSend);
-  document.getElementById('aiChatInput')?.addEventListener('keydown', function(e) {
+  if ((el = document.getElementById('aiChatSend'))) el.addEventListener('click', aiChatSend);
+  if ((el = document.getElementById('aiChatInput'))) el.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') aiChatSend();
   });
+
+  // Mobile: scroll chat input into view when keyboard opens
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', function() {
+      var inp = document.getElementById('aiChatInput');
+      if (inp && document.activeElement === inp) {
+        setTimeout(function() { inp.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200);
+      }
+    });
+  }
 });

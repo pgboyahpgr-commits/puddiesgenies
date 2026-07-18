@@ -48,17 +48,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="min-h-screen flex items-center justify-center p-4">
   <div class="max-w-sm w-full">
     <div class="text-center mb-6">
-      <h1 class="text-4xl font-bold" style="color:#2D3436;">Smak<span style="color:#FF6B6B;">AI</span></h1>
-      <p class="text-gray-400 mt-1">Admin Panel</p>
+      <h1 class="text-4xl font-bold" style="color:var(--text);">Smak<span style="color:#f68e9a;">AI</span></h1>
+      <p class="text-gray-400 mt-1" data-translate>Admin Panel</p>
     </div>
     <div class="bg-white/80 backdrop-blur rounded-3xl p-6 shadow-lg border border-gray-100">
       <?php if ($error): ?>
         <div class="bg-red-50 text-red-500 p-3 rounded-xl text-sm mb-4 text-center"><?= htmlspecialchars($error) ?></div>
       <?php endif; ?>
       <form method="POST">
-        <input type="text" name="username" placeholder="Admin ID" required class="w-full px-4 py-3 rounded-full border-2 border-gray-200 bg-white mb-3 outline-none focus:border-[#FF6B6B] text-sm" />
-        <input type="password" name="password" placeholder="Password" required class="w-full px-4 py-3 rounded-full border-2 border-gray-200 bg-white mb-4 outline-none focus:border-[#FF6B6B] text-sm" />
-        <button type="submit" class="w-full py-3 rounded-full font-bold text-white" style="background:#FF6B6B;">Login</button>
+        <input type="text" name="username" placeholder="Admin ID" required class="w-full px-4 py-3 rounded-full border-2 border-gray-200 bg-white mb-3 outline-none focus:border-[#f68e9a] text-sm" />
+        <input type="password" name="password" placeholder="Password" required class="w-full px-4 py-3 rounded-full border-2 border-gray-200 bg-white mb-4 outline-none focus:border-[#f68e9a] text-sm" />
+        <button type="submit" class="w-full py-3 rounded-full font-bold text-white" style="background:#f68e9a;" data-translate>Login</button>
       </form>
     </div>
   </div>
