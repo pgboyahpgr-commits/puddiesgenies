@@ -1,5 +1,1 @@
-*.log
-node_modules/
-public_html/data/.gh_token
-public_html/data/chat/table_*.json
-public_html/data/*.cache.json
+public_html/data/.openrouter_key
