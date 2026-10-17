@@ -1,4 +1,5 @@
 # SmakAI — Smart Restaurant Ordering System
+# built for takover hackathon 
 
 A cartoon-themed, AI-powered restaurant ordering system for a hackathon. Runs entirely on InfinityFree (PHP 8, no MySQL) with flat-file JSON storage.
 
